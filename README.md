@@ -8,27 +8,30 @@ To make it easy for you to get started with the project, follow the steps in the
 
 ### 1. Clone this repository
 
-For this you run: 
+Open a terminal and run the following command:
 ```
 https://github.com/autuanh/pools-rest-api.git
 ```
 
 ### 2. Set up virtual environment
-- Open a terminal and navigate to the directory. Then, run the following command:
+
+- Navigate to the repository you have cloned
 ```
-python -m venv .venv
+cd pools-rest-api
 ```
-- To start using the virtual environment, activate it:
+
+- Create and activate virtual environment
 ```
+python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-### 3. Install all of the packages needed by the environment
+- Install required packages
 ```
-pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
-### 4. Run the project
+### 3. Run the project
 - To start the application, run the following command:
 ```
 python app.py
