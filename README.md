@@ -37,22 +37,53 @@ python3 -m pip install -r requirements.txt
 python app.py
 ```
 
-- Append or insert data to pools
+- Open another terminal and run the following commands:
+
+3.1. Append or insert data to pools
 
 For example:
 ```
 curl -i http://127.0.0.1:5000/pools/append \
 -X POST \
 -H 'Content-Type: application/json' \
--d '{"poolId":1, "poolValues": [1,2,3,4,5]}'
+-d '{"poolId":1, "poolValues": [88, 34, 65, 12, 56, 22, 88]}'
 ```
 
-- Query percentile value from a pool
+You should see something like this:
+```
+HTTP/1.1 200 OK
+Server: Werkzeug/3.0.4 Python/3.12.5
+Date: Wed, 04 Sep 2024 09:27:29 GMT
+Content-Type: application/json
+Content-Length: 28
+Connection: close
+
+{
+  "message": "inserted"
+}
+```
+
+3.2. Query percentile value from a pool
 
 For example:
 ```
 curl -i http://127.0.0.1:5000/pools/query \
 -X POST \
 -H 'Content-Type: application/json' \
--d '{"poolId":1, "percentile": 50}'
+-d '{"poolId":1, "percentile": 55.96}'
+```
+
+You should see something like this:
+```
+HTTP/1.1 200 OK
+Server: Werkzeug/3.0.4 Python/3.12.5
+Date: Wed, 04 Sep 2024 09:27:37 GMT
+Content-Type: application/json
+Content-Length: 75
+Connection: close
+
+{
+  "Calculated percentile value": 59.22,
+  "Total count of elements": 7
+}
 ```
