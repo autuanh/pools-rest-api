@@ -1,4 +1,4 @@
-def calculate_percentile(data, percentile, n=2) -> float:
+def calculate_percentile(data: list, percentile: float, n: int = 2) -> float:
     """Calculates the percentile value of a given data set for a specified percentile, rounded to n decimal places.
 
     Parameters:
