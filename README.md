@@ -10,7 +10,7 @@ To make it easy for you to get started with the project, follow the steps in the
 
 Open a terminal and run the following command:
 ```
-https://github.com/autuanh/pools-rest-api.git
+git clone https://github.com/autuanh/pools-rest-api.git
 ```
 
 ### 2. Set up virtual environment
