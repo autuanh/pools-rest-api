@@ -66,7 +66,7 @@ class TestAPI(TestCase):
         tempfile.NamedTemporaryFile(suffix=".json").name,
     )
     def test_query_pool_happy_case(self):
-        """Tests the behavior of query_pool function with an existent pool id.
+        """Tests the behavior of query_pool function with an existing pool id.
 
         Expected outputs:
             - The first post request should create a new pool with pool id 43 and pool values of [1, 2, 3, 4, 5]
@@ -74,27 +74,27 @@ class TestAPI(TestCase):
             - The second post request to query for pool id 43 and 50th percentile should return status code 200,
             with calculated percentile value is 5 and total count of values in pool is 5.
         """
-        response_v1 = self.client.post(
+        response_1 = self.client.post(
             "/pools/append",
             json={"poolId": 43, "poolValues": [1, 3, 5, 7, 9]},
             headers={"Content-Type": "application/json"},
         )
-        self.assertEqual(response_v1.status_code, 200)
-        self.assertEqual(response_v1.json, {"message": "inserted"})
+        self.assertEqual(response_1.status_code, 200)
+        self.assertEqual(response_1.json, {"message": "inserted"})
 
-        response_v2 = self.client.post(
+        response_2 = self.client.post(
             "/pools/query",
             json={"poolId": 43, "percentile": 50},
             headers={"Content-Type": "application/json"},
         )
-        self.assertEqual(response_v2.status_code, 200)
+        self.assertEqual(response_2.status_code, 200)
         self.assertEqual(
-            response_v2.json,
+            response_2.json,
             {"Calculated percentile value": 5, "Total count of elements": 5},
         )
 
     def test_query_pool_not_found(self):
-        """Tests the behavior of query_pool function with a non-existent pool id.
+        """Tests the behavior of query_pool function with a non-existing pool id.
 
         Expected outputs:
             A post request to query for pool id 100 and 50th percentile should raise a ValueError ('Pool not found').
