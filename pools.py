@@ -8,8 +8,8 @@ class Pools:
     Attributes:
         data_filepath (str): The path to the JSON file.
     Methods:
-        load(): Loads a JSON file into a list from data_filepath
-        save(data): Saves data to a JSON file at data_filepath
+        load(): Loads a JSON file into a list from data_filepath.
+        save(data): Saves data to a JSON file at data_filepath.
     """
 
     data_filepath = os.path.realpath(os.path.dirname(__file__)) + "/pool_data.json"
