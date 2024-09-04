@@ -6,48 +6,88 @@ from unittest.mock import patch
 
 class TestAPI(TestCase):
     def setUp(self):
-        app.config['DEBUG'] = True
-        app.config['TESTING'] = True
+        app.config["DEBUG"] = True
+        app.config["TESTING"] = True
 
     def create_app(self):
         return app
 
-    @patch("app.POOL_DATA_FILEPATH", tempfile.NamedTemporaryFile(suffix='.json', delete=True).name)
-    def test_append_pool(self):
+    @patch(
+        "pools.Pools.data_filepath",
+        tempfile.NamedTemporaryFile(suffix=".json").name,
+    )
+    def test_insert_to_new_pool(self):
         """Tests the behavior of append_pool function.
 
-          Test case:
-              Response content of a request to append or insert a pool with pool id is 99 and pool values
-              of [1, 2, 3, 4] should return status code 200.
+        Expected outputs:
+            A post request to create a new pool with pool id 98 and pool values of [1, 2, 3, 4, 5]
+            should return status code 200 with message 'inserted'.
         """
-        response = self.client.post('/pools/append',
-                                    json={'poolId': 99, 'poolValues': [1, 2, 3, 4]},
-                                    headers={'Content-Type': 'application/json'})
+        response = self.client.post(
+            "/pools/append",
+            json={"poolId": 98, "poolValues": [1, 2, 3, 4, 5]},
+            headers={"Content-Type": "application/json"},
+        )
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json, {"message": "inserted"})
 
-    def test_query_pool_case_1(self):
+    @patch(
+        "pools.Pools.data_filepath",
+        tempfile.NamedTemporaryFile(suffix=".json").name,
+    )
+    def test_append_to_existing_pool(self):
+        """Tests the behavior of append_pool function.
+
+        Expected outputs:
+            - The first post request should create a new pool with pool id 99 and pool values of [11, 12, 13, 14]
+            and return status code 200 with message 'inserted'.
+            - The second post request should append pool values of [15, 16, 17, 18] to pool id 99
+            and return status code 200 with message 'appended'.
+        """
+
+        response_1 = self.client.post(
+            "/pools/append",
+            json={"poolId": 99, "poolValues": [11, 12, 13, 14]},
+            headers={"Content-Type": "application/json"},
+        )
+
+        response_2 = self.client.post(
+            "/pools/append",
+            json={"poolId": 99, "poolValues": [15, 16, 17, 18]},
+            headers={"Content-Type": "application/json"},
+        )
+        self.assertEqual(response_1.status_code, 200)
+        self.assertEqual(response_1.json, {"message": "inserted"})
+        self.assertEqual(response_2.status_code, 200)
+        self.assertEqual(response_2.json, {"message": "appended"})
+
+    def test_query_pool_happy_case(self):
         """Tests the behavior of query_pool function with an existent pool id.
 
-        Test case:
-            - Response content of a request to query pool with pool id is 99 for 50th percentile
-            should return status code 200.
-            - Response content of a request to query pool with pool id is 99 for 50th percentile
-            should return calculated quantile is 2.5 and total count of values in pool is 4.
+        Expected outputs:
+            A post request to query for pool id 98 and 50th percentile should return status code 200,
+            with calculated percentile value is 3 and total count of values in pool is 5.
         """
-        response = self.client.post('/pools/query', json={'poolId': 99, 'percentile': 50},
-                                    headers={'Content-Type': 'application/json'})
+        response = self.client.post(
+            "/pools/query",
+            json={"poolId": 98, "percentile": 50},
+            headers={"Content-Type": "application/json"},
+        )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json, {"Calculated quantile": 2.5,
-                                         "Total count of elements": 4})
+        self.assertEqual(
+            response.json,
+            {"Calculated percentile value": 3, "Total count of elements": 5},
+        )
 
-    def test_query_pool_case_2(self):
+    def test_query_pool_not_found(self):
         """Tests the behavior of query_pool function with a non-existent pool id.
 
-        Test case:
-            Response content of a request to query pool with pool id is 100 for 50th percentile
-            should raise a ValueError.
+        Expected outputs:
+            A post request to query for pool id 100 and 50th percentile should raise a ValueError ('Pool not found').
         """
         with self.assertRaises(ValueError):
-            self.client.post('/pools/query',
-                             json={'poolId': 100, 'percentile': 50},
-                             headers={'Content-Type': 'application/json'})
+            self.client.post(
+                "/pools/query",
+                json={"poolId": 100, "percentile": 50},
+                headers={"Content-Type": "application/json"},
+            )
