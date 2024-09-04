@@ -1,16 +1,18 @@
 from unittest import TestCase
-from utils import calculate_quantile
+from utils import calculate_percentile
 
 
 class TestUtils(TestCase):
     def test_calculate_quantile(self):
-        """Test the behavior of calculate_quantile function.
+        """Test the behavior of calculate_percentile function.
 
         Test cases:
-            - Quantile value of a list from 1 to 4 for 50th percentile should return 2.5.
-            - Quantile value of a list from 0 to 149 for 70th percentile should return 104.3.
-            - Quantile value of a list from 0 to 164 for 50th percentile should return 147.6.
+            - Case 1: Calculating the 50th percentile value of [1, 2, 3, 4] should return 2.5.
+            - Case 2: Calculating the 70th percentile value of [21, 45, 6, 58, 23] should return 40.6.
+            - Case 3: Calculating the 55.96th percentile value of [88, 34, 65, 12, 56, 22, 88] should return 59.22.
         """
-        self.assertEqual(calculate_quantile([1, 2, 3, 4], 50), 2.5)
-        self.assertEqual(calculate_quantile(range(150), 70), 104.3)
-        self.assertEqual(calculate_quantile(range(165), 90), 147.6)
+        self.assertEqual(calculate_percentile([1, 2, 3, 4], 50), 2.5)
+        self.assertEqual(calculate_percentile([21, 45, 6, 58, 23], 70), 40.6)
+        self.assertEqual(
+            calculate_percentile([88, 34, 65, 12, 56, 22, 88], 55.96), 59.22
+        )
