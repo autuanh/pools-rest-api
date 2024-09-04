@@ -11,7 +11,7 @@ pools = Pools.load()
 @app.post("/pools/append")
 def append_pool() -> dict:
     """Handles a post request containing a JSON document with 2 fields: 'poolId' (int) and 'poolValues' (list of ints).
-    Appends values to an existing pool or creates a new pool, then saves new pool data to a JSON file
+    Appends values to a pool (if exists) or creates a new pool, then saves new pool data to a JSON file
 
     Inputs:
         - request: a flask.Request object
